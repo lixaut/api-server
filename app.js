@@ -14,11 +14,17 @@ app.use(express.urlencoded({ extended: false }))
 
 // 封装失败相应函数（一定要在路由之前）
 app.use((req, res, next) => {
-  res.cc = function (err, status = 1) {
-    res.send({
-      status,
-      message: err instanceof Error ? err.message : err
-    })
+  res.cc = {
+    fn: function (err, status = 1) {
+      if (this.flag) {
+        this.flag = false
+        return res.send({
+          status,
+          message: err instanceof Error ? err.message : err
+        })
+      }
+    },
+    flag: true
   }
   next()
 })
@@ -29,9 +35,9 @@ app.use('/api', userRouter)
 // 定义错误级别的中间件
 app.use((err, req, res, next) => {
   // 验证失败的错误
-  if (err instanceof joi.ValidationError) return res.cc(err)
+  if (err instanceof joi.ValidationError) return res.cc.fn(err)
   // 未知的错误
-  res.cc(err)
+  res.cc.fn(err)
 })
 
 app.listen(3007, () => {
