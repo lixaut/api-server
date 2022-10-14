@@ -3,6 +3,8 @@ const express = require('express')
 const cors = require('cors')
 const userRouter = require('./routers/user')
 const joi = require('@hapi/joi')
+const expressJWT = require('express-jwt')
+const config = require('./config')
 
 const app = express()
 
@@ -12,13 +14,13 @@ app.use(cors())
 // 配置解析表单数据的中间件，注意：这个中间件只能解析 application/x-www-form-urlencoded 格式的表单数据
 app.use(express.urlencoded({ extended: false }))
 
-// 封装失败相应函数（一定要在路由之前）
+// 给 res 挂载发送失败消息函数（一定要在路由之前）
 app.use((req, res, next) => {
   res.cc = {
     fn: function (err, status = 1) {
       if (this.flag) {
         this.flag = false
-        return res.send({
+        res.send({
           status,
           message: err instanceof Error ? err.message : err
         })
@@ -29,6 +31,12 @@ app.use((req, res, next) => {
   next()
 })
 
+// 配置解析 token 中间件
+app.use(
+  expressJWT({ secret: config.jwtSecretKey })
+  .unless({ path: [/^\/api/] })
+)
+
 // 使用用户路由模块
 app.use('/api', userRouter)
 
@@ -36,6 +44,8 @@ app.use('/api', userRouter)
 app.use((err, req, res, next) => {
   // 验证失败的错误
   if (err instanceof joi.ValidationError) return res.cc.fn(err)
+  // token 认证失败
+  if (err.name === 'UnauthorizedError') return res.cc.fn('身份认证失败！')
   // 未知的错误
   res.cc.fn(err)
 })
