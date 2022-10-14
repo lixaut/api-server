@@ -10,7 +10,10 @@ const id = joi.number().integer().min(1).required()
 const nickname = joi.string().required()
 const email = joi.string().email().required()
 
-// 模块化验证注册和登录的表单数据的规则对象
+// 定义更新头像验证规则
+const avatar = joi.string().dataUri().required()
+
+// 导出验证注册和登录的表单数据的规则对象
 exports.reg_login_schema = {
   body: {
     username,
@@ -18,7 +21,7 @@ exports.reg_login_schema = {
   }
 }
 
-// 模块化验证更新用户信息的规则对象
+// 导出验证更新用户信息的规则对象
 exports.update_userinfo_schema = {
   body: {
     id,
@@ -27,10 +30,17 @@ exports.update_userinfo_schema = {
   }
 }
 
-// 模块化验证重置密码的规则对象
+// 导出验证重置密码的规则对象
 exports.update_password_schema = {
   body: {
     oldPwd: password,
     newPwd: joi.not(joi.ref('oldPwd')).concat(password)
+  }
+}
+
+// 导出更新头像的规则对象
+exports.update_avatar_schema = {
+  body: {
+    avatar
   }
 }
