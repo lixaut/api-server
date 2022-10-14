@@ -1,10 +1,11 @@
 
 const express = require('express')
 const cors = require('cors')
-const userRouter = require('./routers/user')
+const userRouter = require('./router/user')
 const joi = require('@hapi/joi')
 const expressJWT = require('express-jwt')
 const config = require('./config')
+const userinfoRouter = require('./router/user_info')
 
 const app = express()
 
@@ -37,8 +38,11 @@ app.use(
   .unless({ path: [/^\/api/] })
 )
 
-// 使用用户路由模块
+// 使用用户登录、注册路由模块
 app.use('/api', userRouter)
+
+// 使用获取用户信息路由模块
+app.use('/my', userinfoRouter)
 
 // 定义错误级别的中间件
 app.use((err, req, res, next) => {
