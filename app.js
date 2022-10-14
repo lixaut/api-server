@@ -5,7 +5,7 @@ const userRouter = require('./router/user')
 const joi = require('@hapi/joi')
 const expressJWT = require('express-jwt')
 const config = require('./config')
-const userinfoRouter = require('./router/user_info')
+const userinfoRouter = require('./router/userinfo')
 
 const app = express()
 

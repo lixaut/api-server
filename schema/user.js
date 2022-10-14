@@ -26,3 +26,11 @@ exports.update_userinfo_schema = {
     email
   }
 }
+
+// 模块化验证重置密码的规则对象
+exports.update_password_schema = {
+  body: {
+    oldPwd: password,
+    newPwd: joi.not(joi.ref('oldPwd')).concat(password)
+  }
+}
