@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs')
 
 // 获取用户信息处理函数
 exports.getUserInfo = (req, res) => {
-  const sql = 'select id, username, nickname, email, user_pic from ev_users where id=?'
+  const sql = 'select id, username, nickname, email, user_pic from se_users where id=?'
   db.query(sql, req.user.id, (err, results) => {
     // 执行语句是否成功
     if (err) return res.cc.fn(err)
@@ -23,7 +23,7 @@ exports.getUserInfo = (req, res) => {
 
 // 更新用户基本信息的处理函数
 exports.updateUserInfo = (req, res) => {
-  const sql = 'update ev_users set ? where id=?'
+  const sql = 'update se_users set ? where id=?'
   db.query(sql, [req.body, req.body.id], (err, results) => {
     if (err) return res.cc.fn(err)
     if (results.affectedRows !== 1) {
@@ -35,7 +35,7 @@ exports.updateUserInfo = (req, res) => {
 
 // 重置密码处理函数
 exports.updatePassword = (req, res) => {
-  const sql = 'select * from ev_users where id=?'
+  const sql = 'select * from se_users where id=?'
   db.query(sql, req.user.id, (err, results) => {
     if (err) return res.cc.fn(err)
     if (results.length !== 1) {
@@ -49,7 +49,7 @@ exports.updatePassword = (req, res) => {
     // 新密码加密
     const newPwd = bcrypt.hashSync(req.body.newPwd, 10)
     // 更新数据库密码
-    const sql = 'update ev_users set password=? where id=?'
+    const sql = 'update se_users set password=? where id=?'
     db.query(sql, [newPwd, req.user.id], (err, results) => {
       if (err) return res.cc.fn(err)
       if (results.affectedRows !== 1) {
@@ -62,7 +62,7 @@ exports.updatePassword = (req, res) => {
 
 // 更新用户头像
 exports.updateAvatar = (req, res) => {
-  const sql = 'update ev_users set user_pic=? where id=?'
+  const sql = 'update se_users set user_pic=? where id=?'
   db.query(sql, [req.body.avatar, req.user.id], (err, results) => {
     if (err) return res.cc.fn(err)
     if (results.affectedRows !== 1) {

@@ -9,7 +9,7 @@ exports.regUser = (req, res) => {
   // 获取客户端提交个服务器的用户数据
   const userInfo = req.body
   // 数据库查重
-  const sqlStr = 'select * from ev_users where username=?'
+  const sqlStr = 'select * from se_users where username=?'
   db.query(sqlStr, userInfo.username, (err, results) => {
     // 执行 sql 语句是否成功
     if (err) return res.cc.fn(err)
@@ -21,7 +21,7 @@ exports.regUser = (req, res) => {
   // 用户密码加密
   userInfo.password = bcrypt.hashSync(userInfo.password, 10)
   // 数据库中插入新用户
-  const sql = 'insert into ev_users set ?'
+  const sql = 'insert into se_users set ?'
   db.query(sql, { username: userInfo.username, password: userInfo.password }, (err, results) => {
     // sql 语句是否执行成功
     if (err) return res.cc.fn(err)
@@ -37,7 +37,7 @@ exports.regUser = (req, res) => {
 // 用户登录的处理函数
 exports.login = (req, res) => {
   const userInfo = req.body
-  const sql = 'select * from ev_users where username=?'
+  const sql = 'select * from se_users where username=?'
   db.query(sql, userInfo.username, (err, results) => {
     // sql 语句是否执行成功
     if (err) return res.cc.fn(err)

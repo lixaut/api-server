@@ -7,6 +7,7 @@ const expressJWT = require('express-jwt')
 const config = require('./config')
 const userinfoRouter = require('./router/userinfo')
 const artCateRouter = require('./router/artcate')
+const articleRouter = require('./router/article')
 
 const app = express()
 
@@ -47,6 +48,9 @@ app.use('/my', userinfoRouter)
 
 // 使用获取文章分类路由模块
 app.use('/my/article', artCateRouter)
+
+// 使用发布文章路由模块
+app.use('/my/article', articleRouter)
 
 // 定义错误级别的中间件
 app.use((err, req, res, next) => {
