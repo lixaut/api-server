@@ -6,6 +6,7 @@ const joi = require('@hapi/joi')
 const expressJWT = require('express-jwt')
 const config = require('./config')
 const userinfoRouter = require('./router/userinfo')
+const artCateRouter = require('./router/artcate')
 
 const app = express()
 
@@ -43,6 +44,9 @@ app.use('/api', userRouter)
 
 // 使用获取用户信息路由模块
 app.use('/my', userinfoRouter)
+
+// 使用获取文章分类路由模块
+app.use('/my/article', artCateRouter)
 
 // 定义错误级别的中间件
 app.use((err, req, res, next) => {
